@@ -35,6 +35,13 @@ async function run() {
       const database = client.db("caymanDb");
       const offersCollection = database.collection("offers");
 
+      //Get Api
+      app.get('/all-offers', async (req, res) => {
+          const cursor = offersCollection.find({});
+          const offers = await cursor.toArray();
+          res.send(offers);
+      })
+
       //Post Api
       app.post('/add-offers', async(req, res) => {
             const offer = req.body; //console.log(req.body);
