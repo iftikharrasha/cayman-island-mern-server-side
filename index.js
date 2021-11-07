@@ -79,6 +79,22 @@ async function run() {
             res.json(result); //output on client site as a json
         })
 
+        //Update Api
+        app.put('/update/:orderId', async(req, res) => {
+            const orderId = req.params.orderId;
+            const updatedOrder = req.body;
+            const query = { _id: ObjectId(orderId) };
+
+            const updateDoc = {
+                $set: {
+                  status: updatedOrder.status
+                },
+            };
+            const result = await ordersCollection.updateOne(query, updateDoc);
+
+            res.json(result); //output on client site as a json
+        })
+
     } finally {
     //   await client.close();
     }
