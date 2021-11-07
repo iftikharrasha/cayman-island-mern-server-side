@@ -68,7 +68,16 @@ async function run() {
 
             console.log('An order was inserted:', result);
             res.json(result); //output on client site as a json
-    })
+        })
+
+        //Delete Api
+        app.delete('/cancel/:orderId', async(req, res) => {
+            const orderId = req.params.orderId;
+            const query = { _id: ObjectId(orderId) };
+            const result = await ordersCollection.deleteOne(query);
+
+            res.json(result); //output on client site as a json
+        })
 
     } finally {
     //   await client.close();
