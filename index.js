@@ -17,6 +17,7 @@ async function run() {
         await client.connect();
         const database = client.db("caymanDb");
         const offersCollection = database.collection("offers");
+        const ordersCollection = database.collection("orders");
 
         //Get Api for offers
         app.get('/all-offers', async (req, res) => {
@@ -24,6 +25,24 @@ async function run() {
             const offers = await cursor.toArray();
             res.send(offers);
         })
+
+        // Get Api for my orders
+        app.get('/my-orders/:orderOwner', async (req, res) => {
+            const orderOwner = req.params.orderOwner;
+            const query = { token: orderOwner };
+
+            const cursor = ordersCollection.find(query);
+            const myOrders = await cursor.toArray();
+            res.send(myOrders);
+        })
+
+        // Get Api for my orders
+        app.get('/all-orders', async (req, res) => {
+            const cursor = ordersCollection.find({});
+            const allOrders = await cursor.toArray();
+            res.send(allOrders);
+        })
+
 
         //Single Get Api for offers
         app.get('/place-order/:orderId', async (req, res) => {
@@ -38,9 +57,18 @@ async function run() {
                 const offer = req.body; //console.log(req.body);
                 const result = await offersCollection.insertOne(offer);
 
-                console.log('A document was inserted:', result);
+                console.log('An offer was inserted:', result);
                 res.json(result); //output on client site as a json
         })
+
+        //Post Api for orders
+        app.post('/add-order', async(req, res) => {
+            const order = req.body; //console.log(req.body);
+            const result = await ordersCollection.insertOne(order);
+
+            console.log('An order was inserted:', result);
+            res.json(result); //output on client site as a json
+    })
 
     } finally {
     //   await client.close();
