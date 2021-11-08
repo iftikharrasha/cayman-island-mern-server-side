@@ -83,20 +83,13 @@ async function run() {
         app.put('/update/:orderId', async(req, res) => {
             const orderId = req.params.orderId;
             const updatedOrder = req.body;
-<<<<<<< HEAD
             updatedOrder.status = false;
             const status = updatedOrder.status;
-=======
->>>>>>> 475d4dc8252a8203cc61ee71eeef5d4e22c07ada
             const query = { _id: ObjectId(orderId) };
 
             const updateDoc = {
                 $set: {
-<<<<<<< HEAD
                   status: status
-=======
-                  status: updatedOrder.status
->>>>>>> 475d4dc8252a8203cc61ee71eeef5d4e22c07ada
                 },
             };
             const result = await ordersCollection.updateOne(query, updateDoc);
