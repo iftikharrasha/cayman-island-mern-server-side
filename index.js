@@ -19,6 +19,7 @@ async function run() {
         const offersCollection = database.collection("offers");
         const ordersCollection = database.collection("orders");
         const userCollections = database.collection("users");
+        const reviewCollections = database.collection("reviews");
 
         //Get Api for offers
         app.get('/all-offers', async (req, res) => {
@@ -46,7 +47,7 @@ async function run() {
 
 
         //Single Get Api for offers
-        app.get('/place-order/:orderId', async (req, res) => {
+        app.get('/exp-details/:orderId', async (req, res) => {
             const orderId = req.params.orderId;
             const query = { _id: ObjectId(orderId) };
             const offer = await offersCollection.findOne(query);
@@ -127,6 +128,30 @@ async function run() {
 
             const result = await userCollections.updateOne(filter, updateDoc, options);
             res.json(result);
+        })
+
+        //Get Api for users
+        app.get('/reviews', async (req, res) => {
+            const cursor = reviewCollections.find({});
+            const reviews = await cursor.toArray();
+            res.send(reviews);
+        })
+
+        //Post Api for reviews
+        app.post('/add-review', async(req, res) => {
+            const review = req.body;
+            const result = await reviewCollections.insertOne(review);
+            res.json(result);
+        })
+
+        // Get Api for reviews with id
+        app.get('/reviews/:orderId', async (req, res) => {
+            const orderId = req.params.orderId;
+            const query = { orderId: orderId };
+
+            const cursor = reviewCollections.find(query);
+            const reviews = await cursor.toArray();
+            res.send(reviews);
         })
 
     } finally {
