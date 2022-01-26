@@ -18,6 +18,7 @@ async function run() {
         const database = client.db("caymanDb");
         const offersCollection = database.collection("offers");
         const ordersCollection = database.collection("orders");
+        const userCollections = database.collection("users");
 
         //Get Api for offers
         app.get('/all-offers', async (req, res) => {
@@ -93,6 +94,37 @@ async function run() {
             const result = await ordersCollection.updateOne(query, updateDoc);
 
             res.json(result); //output on client site as a json
+        })
+
+        //Get Api for users
+        app.get('/users', async (req, res) => {
+            const cursor = userCollections.find({});
+            const users = await cursor.toArray();
+            res.send(users);
+        })
+
+        //Single Get Api for user email
+        app.get('/users/:email', async (req, res) => {
+            const email = req.params.email;
+            const query = { email: email };
+            const user = await userCollections.findOne(query);
+
+            let isAdmin = false;
+            if(user?.role === 'admin'){
+                isAdmin = true;
+            }
+            res.json({admin: isAdmin});
+        })
+
+        //Put Api for users - upsert
+        app.put('/users-put', async(req, res) => {
+            const user = req.body; 
+            const filter = { email: user.email };
+            const options = { upsert: true };
+            const updateDoc = { $set: user };
+
+            const result = await userCollections.updateOne(filter, updateDoc, options);
+            res.json(result);
         })
 
     } finally {
