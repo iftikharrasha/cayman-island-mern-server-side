@@ -119,6 +119,13 @@ async function run() {
             res.json(result); //output on client site as a json
         })
 
+        //Get Api for all users
+        app.get('/users', async (req, res) => {
+            const cursor = userCollections.find({});
+            const users = await cursor.toArray();
+            res.send(users);
+        })
+
         //Single Get Api for user email
         app.get('/users/:email', async (req, res) => {
             const email = req.params.email;
@@ -132,12 +139,12 @@ async function run() {
             res.json({admin: isAdmin});
         })
 
-        //Get Api for users
-        app.get('/users', async (req, res) => {
-            const cursor = userCollections.find({});
-            const users = await cursor.toArray();
-            res.send(users);
-        })
+        //Post Api for users
+        app.post('/users', async(req, res) => {
+           const user = req.body;
+           const result = await userCollections.insertOne(user);
+           res.json(result); 
+       })
 
         //Put Api for users - upsert
         app.put('/users', async(req, res) => {
