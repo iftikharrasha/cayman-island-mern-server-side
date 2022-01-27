@@ -49,11 +49,11 @@ async function run() {
         })
 
         // Get Api for my orders
-        app.get('/my-orders/:orderOwner', async (req, res) => {
-            const orderOwner = req.params.orderOwner;
-            const query = { token: orderOwner };
+        app.get('/my-posts/:postOwner', async (req, res) => {
+            const postOwner = req.params.postOwner;
+            const query = { addedBy: postOwner };
 
-            const cursor = ordersCollection.find(query);
+            const cursor = offersCollection.find(query);
             const myOrders = await cursor.toArray();
             res.send(myOrders);
         })
@@ -137,6 +137,16 @@ async function run() {
                 isAdmin = true;
             }
             res.json({admin: isAdmin});
+        })
+
+        //Put Api for admin
+        app.put('/users/admin', async(req, res) => {
+            const user = req.body; 
+            const filter = { email: user.email };
+            const updateDoc = { $set: {role: 'admin'} };
+
+            const result = await userCollections.updateOne(filter, updateDoc);
+            res.json(result);
         })
 
         //Post Api for users
