@@ -24,6 +24,13 @@ async function run() {
         //Get Api for offers
         app.get('/all-experiences', async (req, res) => {
             const cursor = offersCollection.find({});
+            const offers = await cursor.toArray();
+            res.send(offers);
+        })
+
+        //Get Api for offers
+        app.get('/all-experiences-with-page', async (req, res) => {
+            const cursor = offersCollection.find({});
 
             const page = req.query.page;
             const size = parseInt(req.query.size);
