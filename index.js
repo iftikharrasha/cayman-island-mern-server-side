@@ -24,8 +24,21 @@ async function run() {
         //Get Api for offers
         app.get('/all-experiences', async (req, res) => {
             const cursor = offersCollection.find({});
-            const offers = await cursor.toArray();
-            res.send(offers);
+
+            const page = req.query.page;
+            const size = parseInt(req.query.size);
+            let offers;
+            const count = await cursor.count();
+
+            if(page){
+                offers = await cursor.skip(page*size).limit(size).toArray();
+            }else{
+                offers = await cursor.toArray();
+            }
+            res.send({
+                count,
+                offers
+            });
         })
 
         // Get Api for my orders
