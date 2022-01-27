@@ -119,13 +119,6 @@ async function run() {
             res.json(result); //output on client site as a json
         })
 
-        //Get Api for users
-        app.get('/users', async (req, res) => {
-            const cursor = userCollections.find({});
-            const users = await cursor.toArray();
-            res.send(users);
-        })
-
         //Single Get Api for user email
         app.get('/users/:email', async (req, res) => {
             const email = req.params.email;
@@ -139,8 +132,15 @@ async function run() {
             res.json({admin: isAdmin});
         })
 
+        //Get Api for users
+        app.get('/users', async (req, res) => {
+            const cursor = userCollections.find({});
+            const users = await cursor.toArray();
+            res.send(users);
+        })
+
         //Put Api for users - upsert
-        app.put('/users-put', async(req, res) => {
+        app.put('/users', async(req, res) => {
             const user = req.body; 
             const filter = { email: user.email };
             const options = { upsert: true };
