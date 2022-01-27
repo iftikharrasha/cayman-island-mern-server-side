@@ -22,7 +22,7 @@ async function run() {
         const reviewCollections = database.collection("reviews");
 
         //Get Api for offers
-        app.get('/all-offers', async (req, res) => {
+        app.get('/all-experiences', async (req, res) => {
             const cursor = offersCollection.find({});
             const offers = await cursor.toArray();
             res.send(offers);
@@ -55,7 +55,7 @@ async function run() {
         })
 
         //Post Api for offers
-        app.post('/add-offers', async(req, res) => {
+        app.post('/add-experience', async(req, res) => {
                 const offer = req.body; //console.log(req.body);
                 const result = await offersCollection.insertOne(offer);
 
