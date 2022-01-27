@@ -96,7 +96,7 @@ async function run() {
         app.delete('/cancel/:orderId', async(req, res) => {
             const orderId = req.params.orderId;
             const query = { _id: ObjectId(orderId) };
-            const result = await ordersCollection.deleteOne(query);
+            const result = await offersCollection.deleteOne(query);
 
             res.json(result); //output on client site as a json
         })
@@ -114,7 +114,7 @@ async function run() {
                   status: status
                 },
             };
-            const result = await ordersCollection.updateOne(query, updateDoc);
+            const result = await offersCollection.updateOne(query, updateDoc);
 
             res.json(result); //output on client site as a json
         })
@@ -164,6 +164,15 @@ async function run() {
             const updateDoc = { $set: user };
 
             const result = await userCollections.updateOne(filter, updateDoc, options);
+            res.json(result);
+        })
+
+        //Delete Api for users
+        app.delete('/delete-user/:id', async(req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await userCollections.deleteOne(query);
+
             res.json(result);
         })
 
